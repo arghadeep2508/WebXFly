@@ -123,6 +123,7 @@
 .ind-bar i{display:block;height:100%;background:var(--red);transform-origin:left;transform:scaleX(0)}
 
 @media (max-width:860px){
+  .ind-foot{right:88px}   /* keep the 01/06 counter clear of the WhatsApp button */
   /* phones: header on top, one device in the middle, copy underneath */
   .rail-wrap{left:0;top:20vh;bottom:auto;height:34vh}
   .rail-wrap::after{display:none}

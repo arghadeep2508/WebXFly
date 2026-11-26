@@ -123,13 +123,11 @@
 
     <!-- Stage 0: VFX layer — dial rings, motion-trail X's, impact flash, shockwaves, sparks -->
     <div class="xfx" id="xfx" aria-hidden="true">
-      <svg class="xring" viewBox="0 0 100 100">
-        <circle class="ticks" cx="50" cy="50" r="49" pathLength="120"/>
-        <circle class="track" cx="50" cy="50" r="45"/>
-        <circle class="arc" cx="50" cy="50" r="45" pathLength="1"/>
-        <g class="orb"><circle class="tail" cx="50" cy="50" r="45" pathLength="1"/><circle class="dot" cx="50" cy="5" r="1.6"/></g>
-      </svg>
-      <span class="xtrail t1">X</span><span class="xtrail t2">X</span><span class="xtrail t3">X</span>
+      <!-- three layers so the spinning parts only rotate (cheap) instead of being redrawn every frame -->
+      <svg class="xring xr-ticks" viewBox="0 0 100 100"><circle class="ticks" cx="50" cy="50" r="49" pathLength="120"/></svg>
+      <svg class="xring xr-arc" viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" pathLength="1"/></svg>
+      <svg class="xring xr-orb" viewBox="0 0 100 100"><circle class="tail" cx="50" cy="50" r="45" pathLength="1"/><circle class="dot" cx="50" cy="5" r="1.6"/></svg>
+      <i class="xglow"></i><span class="xtrail t1">X</span><span class="xtrail t2">X</span><span class="xtrail t3">X</span>
       <i class="xflash"></i><i class="xwave"></i><i class="xwave w2"></i>
       <div class="xsparks" id="xsparks"></div>
     </div>
