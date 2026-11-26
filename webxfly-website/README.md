@@ -100,7 +100,7 @@ Every time you push a change to GitHub, Vercel redeploys automatically.
 
 | What | Where |
 |---|---|
-| WhatsApp / phone number | Search `918600894860` in `index.html`, `privacy.html`, `terms.html` |
+| WhatsApp / phone number | Search `918609894860` in `index.html`, `privacy.html`, `terms.html` |
 | Email | `data-mail="gmail.com|webxfly26"` (written as *domain\|name* so spam bots can't read it) |
 | Prices | Pricing section in `index.html` (the `data-n` numbers drive the count-up animation) |
 | Crowd image | Replace `assets/crowd-back.webp` and `assets/crowd-front.webp` with a licensed photo — same file names, no code changes |
