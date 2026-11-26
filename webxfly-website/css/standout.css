@@ -60,7 +60,7 @@
 
 /* nav sits over a dark section here, so it flips to light-on-dark */
 .nav{transition:opacity .9s ease,transform .9s var(--out-expo),background .45s,padding .4s,border-color .45s,color .45s}
-.nav.is-dark{background:rgba(11,10,10,.82);border-bottom-color:rgba(255,255,255,.10);color:#f1ede6}
+.nav.is-dark{background:rgba(11,10,10,.93);border-bottom-color:rgba(255,255,255,.10);color:#f1ede6}
 .nav.is-dark .nav__links a{color:#cfcabf}
 .nav.is-dark .nav__links a:hover{color:#fff}
 .nav.is-dark .brand__text small{color:#8d8880}

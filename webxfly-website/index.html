@@ -3,23 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebXFly — Web Agency · Fast, modern websites for growing businesses</title>
-  <meta name="description" content="WebXFly is a web agency in India building fast, mobile-friendly websites for restaurants, cafés, clinics, salons, gyms and local businesses. Fixed prices, delivered in 2–7 days.">
+  <title>WebXFly | Website Design Agency in India — Websites from ₹999</title>
+  <meta name="description" content="WebXFly designs fast, mobile-friendly websites for small businesses in India — restaurants, cafés, clinics, salons, gyms and shops. From ₹999, live in 2–7 days.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://webxfly.vercel.app/">
   <meta name="theme-color" content="#f4f2ed">
   <link rel="icon" href="favicon.ico" sizes="48x48">
   <link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <!-- Link previews on WhatsApp / social. Update the image URL if your Vercel address is different. -->
+  <!-- Link previews on WhatsApp / social. If you move to your own domain, update every webxfly.vercel.app on this page, in sitemap.xml and in robots.txt. -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="WebXFly">
-  <meta property="og:title" content="WebXFly — Turn ideas into digital experiences">
-  <meta property="og:description" content="Fast, mobile-friendly websites for growing businesses. Fixed prices, delivered in 2–7 days.">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:url" content="https://webxfly.vercel.app/">
+  <meta property="og:title" content="WebXFly — Website Design Agency in India">
+  <meta property="og:description" content="Fast, mobile-friendly websites for small businesses. Fixed prices from ₹999, live in 2–7 days.">
   <meta property="og:image" content="https://webxfly.vercel.app/assets/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WebXFly — Website Design Agency">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WebXFly — Website Design Agency in India">
+  <meta name="twitter:description" content="Fast, mobile-friendly websites for small businesses. Fixed prices from ₹999, live in 2–7 days.">
+  <meta name="twitter:image" content="https://webxfly.vercel.app/assets/og.jpg">
+
+  <!-- Structured data: helps Google show your business name, prices and contact in search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://webxfly.vercel.app/#website",
+        "url": "https://webxfly.vercel.app/",
+        "name": "WebXFly",
+        "inLanguage": "en-IN",
+        "publisher": { "@id": "https://webxfly.vercel.app/#business" }
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://webxfly.vercel.app/#business",
+        "name": "WebXFly",
+        "alternateName": "WebXFly Web Agency",
+        "slogan": "Digital Excellence in Motion",
+        "description": "Website design and development agency in India building fast, mobile-friendly websites, landing pages and web apps for small businesses and startups.",
+        "url": "https://webxfly.vercel.app/",
+        "logo": "https://webxfly.vercel.app/assets/icon-512.png",
+        "image": "https://webxfly.vercel.app/assets/og.jpg",
+        "telephone": "+91-8609894860",
+        "priceRange": "₹999–₹3,499",
+        "currenciesAccepted": "INR",
+        "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+        "areaServed": { "@type": "Country", "name": "India" },
+        "knowsAbout": ["Website design", "Web development", "Landing pages", "Web apps", "Website maintenance"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-8609894860",
+          "contactType": "sales",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"]
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Website design packages",
+          "itemListElement": [
+            { "@type": "Offer", "name": "Basic Website", "itemOffered": { "@type": "Service", "name": "Basic website design" },
+              "priceSpecification": { "@type": "PriceSpecification", "minPrice": 999, "maxPrice": 1499, "priceCurrency": "INR" } },
+            { "@type": "Offer", "name": "Standard Website", "itemOffered": { "@type": "Service", "name": "Standard business website" },
+              "priceSpecification": { "@type": "PriceSpecification", "minPrice": 1999, "maxPrice": 2499, "priceCurrency": "INR" } },
+            { "@type": "Offer", "name": "Pro Website", "itemOffered": { "@type": "Service", "name": "Pro custom website" },
+              "priceSpecification": { "@type": "PriceSpecification", "minPrice": 2999, "maxPrice": 3499, "priceCurrency": "INR" } }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
 
   <link rel="preload" as="image" href="assets/figure.webp" imagesrcset="assets/figure-820.webp 820w, assets/figure.webp 1056w" imagesizes="(max-width: 760px) 90vw, 50vw" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css">
@@ -60,6 +121,17 @@
        4  headline, copy, buttons and nav settle in                                     -->
   <section class="hero" id="hero">
 
+    <!-- Stage 0: VFX layer — dial rings, motion-trail X's, impact flash, shockwaves, sparks -->
+    <div class="xfx" id="xfx" aria-hidden="true">
+      <!-- three layers so the spinning parts only rotate (cheap) instead of being redrawn every frame -->
+      <svg class="xring xr-ticks" viewBox="0 0 100 100"><circle class="ticks" cx="50" cy="50" r="49" pathLength="120"/></svg>
+      <svg class="xring xr-arc" viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" pathLength="1"/></svg>
+      <svg class="xring xr-orb" viewBox="0 0 100 100"><circle class="tail" cx="50" cy="50" r="45" pathLength="1"/><circle class="dot" cx="50" cy="5" r="1.6"/></svg>
+      <i class="xglow"></i><span class="xtrail t1">X</span><span class="xtrail t2">X</span><span class="xtrail t3">X</span>
+      <i class="xflash"></i><i class="xwave"></i><i class="xwave w2"></i>
+      <div class="xsparks" id="xsparks"></div>
+    </div>
+
     <!-- Stage 1–3: wordmark -->
     <div class="intro" id="intro" aria-hidden="true">
       <div class="intro__welcome" id="welcome"></div>
@@ -71,13 +143,13 @@
 
     <!-- Stage 4: content -->
     <div class="hero__content">
-      <p class="kicker"><span>WEBXFLY — WEB AGENCY</span></p>
+      <p class="kicker"><span>WEB DESIGN AGENCY · INDIA</span></p>
       <h1 class="title">
         <span class="line"><span>Turn ideas</span></span>
         <span class="line"><span>into digital</span></span>
         <span class="line"><span><em>experiences.<svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 80 4, 210 4, 297 11"/></svg></em></span></span>
       </h1>
-      <p class="lead">We're <b>WebXFly</b> — a web agency that builds high-performance websites, web apps and digital solutions that help businesses grow.</p>
+      <p class="lead">We're <b>WebXFly</b> — a website design and development agency. We build fast, <span class="nw">mobile-friendly</span> websites and web apps that help small businesses get found online and win more customers.</p>
       <div class="actions">
         <a href="https://wa.me/918609894860?text=Hi%20WebXFly%21%20I%27d%20like%20a%20website%20for%20my%20business." target="_blank" rel="noopener noreferrer" class="btn btn--red magnetic" id="ctaMain">Start a Project <span class="btn__arrow">↗</span></a>
         <a href="#indSec" class="play"><span class="play__circle">▶</span> See what we build</a>
@@ -85,7 +157,7 @@
       <div class="trust">
         <p class="trust__item"><b>2–7 days</b>from brief to live</p>
         <p class="trust__item"><b>Fixed</b>pricing, no surprises</p>
-        <p class="trust__item"><b>1-on-1</b>with the founder</p>
+        <p class="trust__item"><b><span class="nw">1-on-1</span></b>with the founder</p>
       </div>
     </div>
 
@@ -99,7 +171,7 @@
     <!-- Rotating badge -->
     <div class="badge" id="badge" aria-hidden="true">
       <svg viewBox="0 0 120 120"><defs><path id="badgeCircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
-        <text><textPath href="#badgeCircle">WEB • DESIGN • DEVELOPMENT • BRANDING • </textPath></text></svg>
+        <text><textPath href="#badgeCircle" textLength="272" lengthAdjust="spacing">WEB DESIGN • DEVELOPMENT • </textPath></text></svg>
       <span class="badge__star">✦</span>
     </div>
 
@@ -122,7 +194,7 @@
           <p class="kick">01 — WHO WE BUILD FOR</p>
           <h2>Websites built for <em>your kind</em> of business.</h2>
         </div>
-        <p class="note">Sample designs for each kind of business. Yours is designed from scratch — usually live within a week.</p>
+        <p class="note">Sample website designs for restaurants, cafés, clinics, salons, gyms and local shops. Yours is designed from scratch — usually live within a week.</p>
       </div>
   
       <div class="rail-wrap"><div class="rail" id="rail"></div></div>
@@ -182,7 +254,7 @@
       <div class="pr-head">
         <p class="pkick" id="prKick">02 — PRICING</p>
         <h2 id="prTitle">Simple, honest <em>pricing</em></h2>
-        <p id="prSub">Fixed prices, agreed before any work starts. No hidden costs, no surprises at the end.</p>
+        <p id="prSub">Website packages from ₹999. Fixed prices, agreed before any work starts — no hidden costs, no surprises at the end.</p>
       </div>
 
       <div class="pcards" id="pcards">
@@ -191,7 +263,7 @@
           <p class="price"><span class="r" data-n="999">₹0</span> – <span data-n="1499">₹0</span></p>
           <p class="blurb">Perfect for getting started online.</p>
           <ul>
-            <li><i>✓</i>1-Page Website (Landing Page)</li>
+            <li><i>✓</i><span class="nw">1-Page</span> Website (Landing Page)</li>
             <li><i>✓</i>Mobile Responsive Design</li>
             <li><i>✓</i>WhatsApp Integration</li>
             <li><i>✓</i>Contact Section</li>
@@ -225,7 +297,7 @@
             <li><i>✓</i>Custom Design</li>
             <li><i>✓</i>Lead Capture System</li>
             <li><i>✓</i>Speed Optimization</li>
-            <li><i>✓</i>SEO-Ready Structure</li>
+            <li><i>✓</i><span class="nw">SEO-Ready</span> Structure</li>
             <li><i>✓</i>Delivery in 5–7 Days</li>
           </ul>
           <a href="https://wa.me/918609894860?text=Hi%20WebXFly%21%20I%27m%20interested%20in%20the%20Pro%20Plan%20%28%E2%82%B92%2C999%E2%80%93%E2%82%B93%2C499%29." target="_blank" rel="noopener noreferrer" class="btn btn--line">Go Pro</a>
@@ -247,7 +319,7 @@
         </div>
       </div>
       <div class="pbox reveal">
-        <h3>➕ Add-On Services</h3>
+        <h3>➕ <span class="nw">Add-On</span> Services</h3>
         <div class="prow"><span>Logo Design</span><b>On request</b></div>
         <div class="prow"><span>Banner / Poster (Soft Copy)</span><b>On request</b></div>
         <div class="prow"><span>Extra Page</span><b>₹199 / page</b></div>
@@ -291,7 +363,7 @@
             <img src="assets/logo-120.webp" alt="" width="46" height="46" loading="lazy" decoding="async">
             <span><b>Web<span>X</span>Fly</b><small>WEB AGENCY</small></span>
           </div>
-          <p class="about">We design and build fast, mobile-friendly websites and web apps that help small businesses
+          <p class="about">WebXFly is a website design and development agency. We build fast, <span class="nw">mobile-friendly</span> websites and web apps that help small businesses
             across India attract customers and generate leads.</p>
         </div>
 

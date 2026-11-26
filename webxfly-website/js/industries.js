@@ -11,18 +11,18 @@
   /* ---------- Content ---------- */
   const DATA = [
     { key: 'Restaurants', name: 'Restaurants', url: 'spiceroute.demo',
-      desc: 'Menu, photos and one-tap table booking — so diners choose you before they choose the street.',
+      desc: 'Menu, photos and <span class="nw">one-tap</span> table booking — so diners choose you before they choose the street.',
       tags: ['Digital menu', 'Table booking', 'Google Maps'], scope: 'Typically 3–4 pages · live in 3–5 days',
       site: { bg: '#161312', fg: '#f6f2ec', ac: '#e4253a', art: 'linear-gradient(145deg,#6d1119,#1c1413)', card: 'rgba(255,255,255,.06)',
-        logo: 'Spice<em>Route</em>', h: 'Flavours worth<br><em>the table.</em>', p: 'North-Indian kitchen in Kolkata. Open 12pm – 11pm, every day.',
+        logo: 'Spice<em>Route</em>', h: 'Flavours worth<br><em>the table.</em>', p: '<span class="nw">North-Indian</span> kitchen in Kolkata. Open 12pm – 11pm, every day.',
         btn: 'Book a Table', ghost: 'View Menu',
         block: 'row', items: [['Butter Chicken', '₹340'], ['Paneer Tikka', '₹260'], ['Biryani', '₹290']] } },
 
     { key: 'Cafés', name: 'Cafés & Bakeries', url: 'cafeluna.demo',
-      desc: 'A warm, photo-led page with your menu, timings and location — built to bring in the morning crowd.',
+      desc: 'A warm, <span class="nw">photo-led</span> page with your menu, timings and location — built to bring in the morning crowd.',
       tags: ['Menu board', 'Timings', 'Instagram feed'], scope: 'Single page · live in 2–3 days',
       site: { bg: '#faf6ef', fg: '#1d1a16', ac: '#ce1a2b', art: 'linear-gradient(150deg,#d8a06a,#8a4a2a)', card: 'rgba(20,18,16,.05)',
-        logo: 'Cafe<em>Luna</em>', h: 'Fresh bakes,<br><em>slow mornings.</em>', p: 'Hand-brewed coffee and daily bakes, from 7am.',
+        logo: 'Cafe<em>Luna</em>', h: 'Fresh bakes,<br><em>slow mornings.</em>', p: '<span class="nw">Hand-brewed</span> coffee and daily bakes, from 7am.',
         btn: 'See Menu', ghost: 'Find Us',
         block: 'row', items: [['Cappuccino', '₹160'], ['Croissant', '₹120'], ['Cheesecake', '₹210']] } },
 
@@ -30,7 +30,7 @@
       desc: 'A calm, trustworthy site with doctor profiles and an appointment form patients actually finish.',
       tags: ['Appointments', 'Doctor profiles', 'WhatsApp'], scope: '5–7 pages · live in 5–7 days',
       site: { bg: '#ffffff', fg: '#16191d', ac: '#ce1a2b', art: 'linear-gradient(150deg,#c9d6e4,#6d8299)', card: '#f2f5f8',
-        logo: 'Care<em>Point</em>', h: 'Care that<br><em>fits your day.</em>', p: 'General medicine & diagnostics. Walk-ins welcome.',
+        logo: 'Care<em>Point</em>', h: 'Care that<br><em>fits your day.</em>', p: 'General medicine & diagnostics. <span class="nw">Walk-ins</span> welcome.',
         btn: 'Book Appointment', ghost: 'Our Doctors',
         block: 'slots', items: ['10:00', '11:30', '04:00', '06:30'] } },
 
@@ -43,7 +43,7 @@
         block: 'list', items: [['Haircut & Style', '₹499'], ['Facial', '₹899'], ['Bridal Package', '₹6,500']] } },
 
     { key: 'Gyms', name: 'Gyms & Trainers', url: 'fitzone.demo',
-      desc: 'Bold, high-energy page with class timings, plans and a free-trial form that fills your batches.',
+      desc: 'Bold, <span class="nw">high-energy</span> page with class timings, plans and a <span class="nw">free-trial</span> form that fills your batches.',
       tags: ['Class schedule', 'Plans', 'Free trial form'], scope: 'Single page · live in 2–3 days',
       site: { bg: '#0f0e0d', fg: '#f4f2ed', ac: '#e4253a', art: 'linear-gradient(150deg,#b3121f,#17100f)', card: 'rgba(255,255,255,.07)',
         logo: 'Fit<em>Zone</em>', h: 'Stronger<br><em>every week.</em>', p: 'Strength, HIIT and personal training. 5am – 10pm.',
