@@ -91,13 +91,18 @@
     const flyShift = Math.min(vw / 2 + half - rFly.left, vw * 0.98 - rFly.right);
     gX.style.transform = '';                            // let the CSS scale the X again
     if (mobile) {
-      // phones: the outline X drops out of the word and frames the sculpture's head, sized to the screen
-      const cy = r.top + r.height / 2 - vh * 0.27;
-      word.style.setProperty('--x-scale', ((innerHeight * 0.5) / (gX.offsetHeight || 1)).toFixed(2));
-      word.style.setProperty('--x-dy', innerHeight * 0.6 - cy + 'px');
+      // phones: the outline X drops out of the word and stands behind the sculpture — as tall as
+      // the sculpture and centred on it, so its arms frame the head on both sides (like desktop)
+      const cy = r.top + r.height / 2 - vh * 0.27;      // X centre once the word has lifted
+      const figMid = vh - ih / 2;                        // sculpture centre during the intro (bottom sits at vh)
+      word.style.setProperty('--x-scale', ((ih * 1.04) / (gX.offsetHeight || 1)).toFixed(3));
+      word.style.setProperty('--x-dy', figMid - cy + 'px');
+      // and sideways onto the head (it sits a touch left of the image centre)
+      word.style.setProperty('--x-dx', vw / 2 - ih * RATIO * 0.03 - (r.left + r.width / 2) + 'px');
     } else {
       word.style.setProperty('--x-scale', Math.max(2.6, (ih * RATIO * 1.2) / (gX.offsetWidth || 1)).toFixed(2));
       word.style.setProperty('--x-dy', '0px');
+      word.style.setProperty('--x-dx', '0px');
     }
 
     // ghost wordmark centred behind the settled sculpture
@@ -227,7 +232,7 @@
   const cursor = $('cursor');
   let mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my, px = 0, py = 0;
   addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; cursor.classList.add('is-on'); }, { passive: true });
-  document.addEventListener('mouseover', (e) => cursor.classList.toggle('is-hover', !!e.target.closest('a, button, .chip, .pcard')));
+  document.addEventListener('mouseover', (e) => cursor.classList.toggle('is-hover', !!e.target.closest('a, button, .chip, .pcard, .rail-wrap')));
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function tick(t) {
@@ -260,7 +265,14 @@
 
   /* ---------- Controls ---------- */
   introBtn.addEventListener('click', () => (done ? play() : showFinal()));
+  // Phones fire 'resize' every time the address bar slides in or out while you scroll.
+  // Re-laying out the hero then makes the whole page jump — so on touch screens only a
+  // real width change (rotation, split screen) triggers a re-measure.
+  let lastW = innerWidth;
+  const touch = matchMedia('(pointer: coarse)').matches;
   addEventListener('resize', () => {
+    if (touch && innerWidth === lastW) return;
+    lastW = innerWidth;
     if (!done) return;
     instantly(() => { measure(); splitWord(true); setFigure(0, 0, 1); });
   });
