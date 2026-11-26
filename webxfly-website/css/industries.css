@@ -24,8 +24,9 @@
 
 /* ---------- Rail ---------- */
 .rail-wrap{position:absolute;z-index:3;top:14vh;bottom:8vh;left:32vw;right:0;overflow:hidden;
-  /* soft edge so panels fade out instead of being cut off */
-  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 7%);mask-image:linear-gradient(to right,transparent 0,#000 7%)}
+}
+/* soft edge so panels fade out instead of being cut off — a painted fade (much cheaper than a mask while scrolling) */
+.rail-wrap::after{content:"";position:absolute;inset:0 auto 0 0;width:7%;z-index:2;pointer-events:none;background:linear-gradient(to right,var(--paper),rgba(244,242,237,0))}
 .rail{position:absolute;top:0;left:0;height:100%;display:flex;will-change:transform}
 .panel{position:relative;width:68vw;height:100%;flex:none;display:flex;align-items:center;justify-content:center}
 /* pinned copy column — always readable while the devices slide past */
@@ -123,7 +124,8 @@
 
 @media (max-width:860px){
   /* phones: header on top, one device in the middle, copy underneath */
-  .rail-wrap{left:0;top:20vh;bottom:auto;height:34vh;-webkit-mask-image:none;mask-image:none}
+  .rail-wrap{left:0;top:20vh;bottom:auto;height:34vh}
+  .rail-wrap::after{display:none}
   .panel{width:100vw}
   .p-devices{height:100%;align-items:center}
   .browser{width:86vw}
@@ -143,4 +145,4 @@
 
 /* nav picks up a backdrop once you scroll past the hero */
 .nav{transition:opacity .9s ease,transform .9s var(--out-expo),background .4s,padding .4s,border-color .4s}
-.nav.is-scrolled{background:rgba(244,242,237,.86);backdrop-filter:blur(14px);padding:11px 0;border-bottom:1px solid var(--line)}
+.nav.is-scrolled{background:rgba(244,242,237,.95);padding:11px 0;border-bottom:1px solid var(--line)}

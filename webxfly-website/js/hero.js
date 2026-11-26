@@ -10,6 +10,7 @@
   const welcome = $('welcome'), word = $('word'), ghost = $('ghost');
   const figure = $('figure'), figFloat = $('figFloat'), figImg = $('figImg');
   const badge = $('badge'), counter = $('count'), introBtn = $('introBtn');
+  const content = document.querySelector('.hero__content');
 
   const RATIO = 1056 / 1400;                       // sculpture width / height
   const REC = new URLSearchParams(location.search).has('rec');
@@ -26,6 +27,17 @@
   const gWeb = word.querySelector('.g--web'), gX = word.querySelector('.g--x'), gFly = word.querySelector('.g--fly');
   const welcomeLetters = [...welcome.querySelectorAll('span')];
   const wordLetters = [...word.querySelectorAll('.ch span')];
+  wordLetters.forEach((l, i) => l.style.setProperty('--i', i));
+  // impact sparks: thin streaks in brand red / black / silver
+  const sparkBox = $('xsparks'), sparks = [];
+  for (let i = 0; i < 22; i++) {
+    const el = document.createElement('i');
+    el.style.setProperty('--a', (i * 360 / 22 + (i % 3) * 7) + 'deg');
+    el.style.setProperty('--l', 10 + (i * 13 % 22) + 'px');
+    el.style.setProperty('--c', ['#e11d2e', '#111', '#b9bec4', '#ff4757'][i % 4]);
+    el.style.setProperty('--dl', (i % 5) * 0.02 + 's');
+    sparkBox.appendChild(el); sparks.push(el);
+  }
   welcomeLetters.forEach((s, i) => (s.style.transitionDelay = i * 0.04 + 's'));
   const mid = (wordLetters.length - 1) / 2;
   const delaysIn  = () => wordLetters.forEach((s, i) => (s.style.transitionDelay = 0.22 + i * 0.06 + 's'));
@@ -33,7 +45,7 @@
 
   /* ---------- Measure + place everything for this screen ---------- */
   function measure() {
-    const vw = innerWidth, vh = Math.max(innerHeight, 620), mobile = vw < 760;
+    const vw = innerWidth, vh = Math.max(innerHeight, 620), mobile = vw <= 760;
 
     // wordmark size: wide and readable, never stretched
     word.style.fontSize = '100px';
@@ -46,6 +58,21 @@
     let h = mobile ? vh * 0.5 : vh * 0.92, w = h * RATIO;
     const maxW = mobile ? vw * 0.86 : Math.min(vw * 0.47, vw - rightGap - textRight - 24);
     if (w > maxW) { w = maxW; h = w / RATIO; }
+
+    // phones: the sculpture sits below the text, never on top of it. On short phones the hero
+    // grows a little taller than the screen (scroll to see the rest) instead of overlapping.
+    let lift = 0;
+    if (mobile) {
+      const textBottom = content.offsetTop + content.offsetHeight + 14;
+      const minFig = vh * 0.4;
+      let room = vh - textBottom;
+      if (room < minFig) { lift = Math.ceil(textBottom + minFig - vh); room = minFig; }
+      h = Math.min(h, room); w = h * RATIO;
+    }
+    hero.style.minHeight = lift ? vh + lift + 'px' : '';
+    hero.style.setProperty('--lift', lift + 'px');
+    hero.style.setProperty('--screen-h', lift ? innerHeight + 'px' : '100%');
+    hero.style.setProperty('--intro-top', lift ? innerHeight / 2 + 'px' : '50%');
     const right = mobile ? (vw - w) / 2 : rightGap;
     figure.style.setProperty('--fig-h', h + 'px');
     figure.style.setProperty('--fig-right', right + 'px');
@@ -57,11 +84,21 @@
 
     // how far WEB and FLY must part so the sculpture fits between them
     [gWeb, gX, gFly].forEach(g => (g.style.transform = 'none'));
+    const r = gX.getBoundingClientRect();            // the X's slot, ignoring any spin in progress
+    const xs = Math.min(3.2, Math.max(1.15, (Math.min(vw, innerHeight) * (mobile ? 0.27 : 0.2)) / (r.height || 1)));
     const half = ih * RATIO * 0.42, rWeb = gWeb.getBoundingClientRect(), rFly = gFly.getBoundingClientRect();
     const webShift = Math.max(vw / 2 - half - rWeb.right, vw * 0.02 - rWeb.left);
     const flyShift = Math.min(vw / 2 + half - rFly.left, vw * 0.98 - rFly.right);
     gX.style.transform = '';                            // let the CSS scale the X again
-    word.style.setProperty('--x-scale', Math.max(2.6, (ih * RATIO * 1.2) / (gX.offsetWidth || 1)).toFixed(2));
+    if (mobile) {
+      // phones: the outline X drops out of the word and frames the sculpture's head, sized to the screen
+      const cy = r.top + r.height / 2 - vh * 0.27;
+      word.style.setProperty('--x-scale', ((innerHeight * 0.5) / (gX.offsetHeight || 1)).toFixed(2));
+      word.style.setProperty('--x-dy', innerHeight * 0.6 - cy + 'px');
+    } else {
+      word.style.setProperty('--x-scale', Math.max(2.6, (ih * RATIO * 1.2) / (gX.offsetWidth || 1)).toFixed(2));
+      word.style.setProperty('--x-dy', '0px');
+    }
 
     // ghost wordmark centred behind the settled sculpture
     ghost.style.setProperty('--ghost-size', '100px');
@@ -70,10 +107,35 @@
     ghost.style.setProperty('--ghost-x', centreX - gw / 2 + 'px');
 
     // badge: just left of the sculpture's head
-    hero.style.setProperty('--badge-x', Math.max(10, mobile ? vw - 118 - 12 : vw - right - w - 110) + 'px');
-    hero.style.setProperty('--badge-y', (mobile ? vh - h - 30 : vh * 0.2) + 'px');
+    // phones: in the empty space to the right of the buttons; desktop: just left of the sculpture's head
+    if (mobile) {
+      const actions = content.querySelector('.actions');
+      hero.style.setProperty('--badge-x', vw - 90 - 14 + 'px');
+      hero.style.setProperty('--badge-y', content.offsetTop + actions.offsetTop + (actions.offsetHeight - 90) / 2 + 'px');
+    } else {
+      hero.style.setProperty('--badge-x', Math.max(10, vw - right - w - 110) + 'px');
+      hero.style.setProperty('--badge-y', vh * 0.2 + 'px');
+    }
 
-    M = { vw, vh, h, mobile, introScale: ih / h, introX: vw / 2 - centreX, webShift, flyShift };
+    // prelude: how far the X must move to sit dead-centre, and how big it spins
+    hero.style.setProperty('--xdx', vw / 2 - (r.left + r.width / 2) + 'px');
+    hero.style.setProperty('--xdy', innerHeight / 2 - (r.top + r.height / 2) + 'px');
+    hero.style.setProperty('--xs', xs.toFixed(3));
+    const ring = Math.round(r.height * xs * 1.75);
+    hero.style.setProperty('--ring', ring + 'px');
+    hero.style.setProperty('--xfs', parseFloat(word.style.fontSize) * xs + 'px');
+    sparks.forEach((el, i) => { el.style.setProperty('--r0', ring * 0.32 + 'px'); el.style.setProperty('--d', ring * (0.85 + (i * 37 % 11) / 14) + 'px'); });
+    // where each WEB / FLY letter flies in from (WEB from the left, FLY swoops in from the upper right)
+    wordLetters.forEach((s2, i) => {
+      if (s2.closest('.g--x')) return;
+      const fly = !!s2.closest('.g--fly'), k = fly ? i - 4 : 2 - i;
+      s2.style.setProperty('--fx', (fly ? 1 : -1) * vw * (0.18 + k * 0.11) + 'px');
+      s2.style.setProperty('--fy', (fly ? -1 : 1) * innerHeight * [0.34, -0.22, 0.4][k] + 'px');
+      s2.style.setProperty('--fr', (fly ? 1 : -1) * [48, -32, 70][k] + 'deg');
+      s2.style.setProperty('--fry', (fly ? -1 : 1) * [85, 60, 95][k] + 'deg');
+    });
+
+    M = { vw, vh, h, mobile, lift, introScale: ih / h, introX: vw / 2 - centreX, webShift, flyShift };
   }
 
   const setFigure = (x, y, s) => {
@@ -98,11 +160,11 @@
   function resetToStart() {
     timers.forEach(clearTimeout); timers = []; done = false;
     instantly(() => {
-      hero.classList.remove('s0', 's1', 's2', 's3', 's4');
+      hero.classList.remove('x0', 'x1', 's0', 's1', 's2', 's3', 's4');
       figure.classList.remove('is-rising', 'is-moving');
       nav.classList.add('is-hidden');
       measure(); splitWord(false); delaysIn();
-      setFigure(M.introX, M.h * M.introScale + 80, M.introScale * 1.06);
+      setFigure(M.introX, M.h * M.introScale + 80 - M.lift, M.introScale * 1.06);
       figure.style.setProperty('--fig-o', 0);
       counter.textContent = '000';
     });
@@ -113,6 +175,7 @@
     timers.forEach(clearTimeout); timers = [];
     instantly(() => {
       measure();
+      hero.classList.remove('x0', 'x1');
       hero.classList.add('s0', 's1', 's2', 's3', 's4');
       splitWord(true);
       figure.classList.remove('is-rising', 'is-moving');
@@ -124,27 +187,29 @@
 
   function play() {
     resetToStart();
-    // 0 — loader
-    at(60, () => hero.classList.add('s0'));
-    for (let k = 1; k <= 25; k++) at(60 + k * 48, () => {
+    // 0 — a lone chrome-red X spins with motion trails while the dial draws (doubles as the loader)
+    at(60, () => hero.classList.add('s0', 'x0'));
+    for (let k = 1; k <= 25; k++) at(160 + k * 74, () => {
       const t = k / 25, e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
       counter.textContent = String(Math.round(e * 100)).padStart(3, '0');
     });
-    // 1 — wordmark rises in
-    at(250, () => hero.classList.add('s1'));
-    // 2 — WEB / FLY part, sculpture rises into the gap
-    at(1500, () => { hero.classList.add('s2'); splitWord(true); });
-    at(1600, () => {
+    // impact — flash, shockwaves, sparks, shake; X glides into its slot
+    at(2050, () => hero.classList.replace('x0', 'x1'));
+    // 1 — WEB and FLY letters fly in from all sides, silver glint runs across
+    at(2450, () => hero.classList.add('s1'));
+    // 2 — WEB / FLY smear apart, sculpture rises into the gap
+    at(4500, () => { hero.classList.remove('x1'); hero.classList.add('s2'); splitWord(true); });
+    at(4600, () => {
       figure.classList.add('is-rising');
       figure.style.setProperty('--fig-o', 1);
-      setFigure(M.introX, 0, M.introScale);
+      setFigure(M.introX, -M.lift, M.introScale);
     });
     // 3 — wordmark leaves, sculpture glides right
-    at(3600, () => { delaysOut(); hero.classList.add('s3'); });
-    at(3750, () => { figure.classList.replace('is-rising', 'is-moving'); setFigure(0, 0, 1); });
+    at(6600, () => { delaysOut(); hero.classList.add('s3'); });
+    at(6750, () => { figure.classList.replace('is-rising', 'is-moving'); setFigure(0, 0, 1); });
     // 4 — headline, nav, badge
-    at(4500, () => { hero.classList.add('s4'); nav.classList.remove('is-hidden'); });
-    at(6500, () => { done = true; introBtn.textContent = '↺ Replay intro'; });
+    at(7500, () => { hero.classList.add('s4'); nav.classList.remove('is-hidden'); });
+    at(9500, () => { done = true; introBtn.textContent = '↺ Replay intro'; });
   }
 
   /* ---------- Smooth mouse parallax + idle float (one rAF loop) ---------- */

@@ -59,3 +59,4 @@
   background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(206,26,43,.10),transparent 60%);transition:opacity .35s}
 .pcard.feat::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,71,87,.20),transparent 60%)}
 @media (hover:hover) and (pointer:fine){ .pcard:hover::before{opacity:1} }
+.nw{white-space:nowrap}
