@@ -1,0 +1,61 @@
+/* ==========================================================
+   WebXFly — site-wide pieces (loads last)
+   progress line · skip link · trust facts · WhatsApp button ·
+   footer icons · footer wordmark motion · iPhone height fixes
+   ========================================================== */
+
+/* full-height stages: 100svh = the visible screen on iPhone (no jump when the toolbar hides) */
+.ind-stage,.so-stage,.pr-stage{height:100vh;height:100svh}
+
+/* keyboard users can jump past the intro */
+.skip{position:fixed;left:16px;top:-60px;z-index:200;background:var(--ink);color:#fff;font:600 14px 'Inter';
+  padding:10px 16px;border-radius:999px;transition:top .25s}
+.skip:focus{top:16px}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
+
+/* thin red reading-progress line */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:120;background:var(--red);
+  transform:scaleX(0);transform-origin:left;pointer-events:none;will-change:transform}
+
+/* hero: three honest facts instead of a client count */
+.trust{gap:0}
+.trust__item{font-size:13px;line-height:1.35;color:var(--ink-2);padding:0 20px;border-left:1px solid var(--line)}
+.trust__item:first-child{padding-left:0;border-left:0}
+.trust__item b{display:block;font:600 18px 'Fraunces',serif;color:var(--ink)}
+
+/* icons inside buttons and contact rows */
+.ft-btns .btn svg{width:18px;height:18px;flex:none}
+.ft-contact a i svg{width:18px;height:18px;color:#f4f2ed}
+.ft-list{list-style:none}
+.ft-list li{font-size:14.5px;color:#a7a39b;margin-bottom:12px}
+.pgrid--gap{margin-top:16px}
+
+/* footer wordmark: rises into place and the X fills red as you reach the very bottom */
+.ft-mark{transform:translate3d(0,calc((1 - var(--t,1)) * 28%),0);opacity:calc(.3 + var(--t,1) * .7);will-change:transform}
+.ft-mark em{color:rgba(228,37,58,calc(var(--t,0) * .9))}
+
+/* floating WhatsApp button */
+.wa-float{position:fixed;right:22px;bottom:22px;z-index:90;width:58px;height:58px;border-radius:50%;
+  display:grid;place-items:center;background:#25d366;color:#fff;box-shadow:0 12px 30px rgba(37,211,102,.38);
+  opacity:0;transform:translate3d(0,24px,0) scale(.8);pointer-events:none;
+  transition:opacity .5s ease,transform .6s var(--spring),box-shadow .3s}
+.wa-float svg{width:30px;height:30px}
+.wa-float.is-on{opacity:1;transform:none;pointer-events:auto}
+.wa-float.is-on::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;
+  animation:waPing 2.6s ease-out infinite}
+.wa-float:hover{box-shadow:0 16px 40px rgba(37,211,102,.5);transform:translate3d(0,-3px,0)}
+@keyframes waPing{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(1.55);opacity:0}}
+
+@media (max-width:760px){
+  .wa-float{right:16px;bottom:16px;width:54px;height:54px}
+}
+@media (prefers-reduced-motion:reduce){
+  .wa-float.is-on::after{animation:none}
+  .ft-mark{transform:none;opacity:1}
+}
+
+/* pricing cards: soft spotlight follows the cursor (mouse/trackpad only) */
+.pcard::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;opacity:0;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(206,26,43,.10),transparent 60%);transition:opacity .35s}
+.pcard.feat::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,71,87,.20),transparent 60%)}
+@media (hover:hover) and (pointer:fine){ .pcard:hover::before{opacity:1} }
