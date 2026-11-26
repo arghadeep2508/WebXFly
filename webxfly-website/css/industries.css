@@ -5,13 +5,22 @@
    ========================================================== */
 /* ---------- Section shell ---------- */
 .ind-sec{position:relative;background:var(--paper)}
-.ind-stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.ind-stage{position:relative;height:100vh;overflow:hidden;touch-action:pan-y;-webkit-user-select:none;user-select:none;outline:none}
+.ind-sec{outline:none}
+/* one screen tall — the panels move sideways (swipe / drag), not with page scroll */
+.ind-sec .ind-stage{min-height:620px;
+  /* desktop bands, all derived from the screen height so nothing collides on short laptops:
+     heading → (mockup | copy) → controls */
+  --ht:max(86px,10.5vh);                          /* heading top (clears the menu bar) */
+  --rt:calc(var(--ht) + 150px);                    /* mockup band top */
+  --rb:calc(4.5vh + 74px);                         /* mockup band bottom (above the controls) */
+  --rh:calc(100svh - var(--rt) - var(--rb))}       /* mockup band height */
 .ind-stage::after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;opacity:.05;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 
 /* header */
-.ind-head h2{max-width:14ch}
-.ind-head{position:absolute;z-index:6;top:7vh;left:max(28px,calc((100vw - var(--maxw))/2 + 28px));right:max(28px,calc((100vw - var(--maxw))/2 + 28px));display:flex;justify-content:space-between;align-items:flex-end;gap:30px;pointer-events:none}
+.ind-head h2{max-width:22ch}   /* two lines on desktop, leaves room for the mockup band */
+.ind-head{position:absolute;z-index:6;top:var(--ht);left:max(28px,calc((100vw - var(--maxw))/2 + 28px));right:max(28px,calc((100vw - var(--maxw))/2 + 28px));display:flex;justify-content:space-between;align-items:flex-end;gap:30px;pointer-events:none}
 .kick{font:600 12px 'Inter';letter-spacing:.28em;color:var(--muted);display:flex;align-items:center;gap:12px}
 .kick::before{content:"";width:34px;height:1.5px;background:var(--red)}
 .ind-head h2{font:600 clamp(28px,3.1vw,50px)/1.02 'Fraunces',serif;letter-spacing:-.03em;margin-top:14px}
@@ -23,14 +32,15 @@
   -webkit-text-stroke:1.5px rgba(20,19,18,.11);transform:translate3d(0,-50%,0);will-change:transform;pointer-events:none}
 
 /* ---------- Rail ---------- */
-.rail-wrap{position:absolute;z-index:3;top:14vh;bottom:8vh;left:32vw;right:0;overflow:hidden;
-}
+.rail-wrap{position:absolute;z-index:3;top:var(--rt);bottom:var(--rb);left:32vw;right:0;overflow:hidden;cursor:grab}
+.ind-stage.is-dragging .rail-wrap,.ind-stage.is-dragging{cursor:grabbing}
+.rail-wrap img{-webkit-user-drag:none}
 /* soft edge so panels fade out instead of being cut off — a painted fade (much cheaper than a mask while scrolling) */
 .rail-wrap::after{content:"";position:absolute;inset:0 auto 0 0;width:7%;z-index:2;pointer-events:none;background:linear-gradient(to right,var(--paper),rgba(244,242,237,0))}
 .rail{position:absolute;top:0;left:0;height:100%;display:flex;will-change:transform}
 .panel{position:relative;width:68vw;height:100%;flex:none;display:flex;align-items:center;justify-content:center}
 /* pinned copy column — always readable while the devices slide past */
-.copy{position:absolute;z-index:5;top:50%;left:max(28px,calc((100vw - var(--maxw))/2 + 28px));width:min(27vw,340px);transform:translateY(-52%)}
+.copy{position:absolute;z-index:5;top:max(var(--rt),calc(50% - 190px));left:max(28px,calc((100vw - var(--maxw))/2 + 28px));width:min(27vw,340px)}
 .copy .p-meta{position:absolute;top:0;left:0;right:0;will-change:transform,opacity}
 
 /* left column */
@@ -49,7 +59,7 @@
 .dev{position:relative;transform-style:preserve-3d;will-change:transform}
 
 /* browser */
-.browser{width:min(54vw,780px);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 50px 90px rgba(20,18,16,.28),0 0 0 1px rgba(20,18,16,.08)}
+.browser{width:min(54vw,780px,calc(var(--rh) * 1.3));border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 50px 90px rgba(20,18,16,.28),0 0 0 1px rgba(20,18,16,.08)}
 .b-bar{height:clamp(26px,2.4vw,34px);background:#e9e6e0;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid rgba(0,0,0,.07)}
 .b-bar i{width:9px;height:9px;border-radius:50%;flex:none}
 .b-url{flex:1;margin-left:10px;height:62%;border-radius:99px;background:#fff;display:flex;align-items:center;padding:0 10px;font:600 clamp(8px,.78vw,11px) 'Inter';color:#8f8b83;gap:6px}
@@ -107,14 +117,29 @@
 .ms.tall .ms-cta{font-size:3cqw;padding:2cqw 3.4cqw}
 
 /* ---------- Bottom bar ---------- */
-.ind-foot{position:absolute;z-index:6;left:max(28px,calc((100vw - var(--maxw))/2 + 28px));right:max(28px,calc((100vw - var(--maxw))/2 + 28px));bottom:4.5vh;display:flex;align-items:center;justify-content:flex-end;gap:26px}
+.ind-foot{position:absolute;z-index:6;left:max(28px,calc((100vw - var(--maxw))/2 + 28px));right:max(100px,calc((100vw - var(--maxw))/2 + 28px));   /* right: clear of the WhatsApp button */
+  bottom:4.5vh;display:flex;align-items:center;justify-content:flex-end;gap:22px}
+/* "drag / swipe to explore" — fades away after the first interaction */
+.ind-hint{margin-right:auto;white-space:nowrap;display:inline-flex;align-items:center;gap:10px;font:600 11.5px 'Inter';letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:opacity .6s ease}
+.ind-hint.is-used{opacity:0}
+.ind-hint__hand{position:relative;width:34px;height:2px;background:rgba(20,19,18,.15);border-radius:2px;overflow:hidden}
+.ind-hint__hand::after{content:"";position:absolute;inset:0;width:40%;background:var(--red);border-radius:2px;animation:indHint 1.8s var(--in-out) infinite}
+@keyframes indHint{0%{transform:translateX(-100%)}60%,100%{transform:translateX(250%)}}
+/* previous / next */
+.ind-arrows{display:flex;gap:8px}
+.ind-arrow{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:rgba(255,255,255,.6);color:var(--ink);cursor:pointer;transition:background .3s,color .3s,border-color .3s,transform .3s var(--out-expo)}
+.ind-arrow svg{width:18px;height:18px}
+.ind-arrow:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ind-arrow:active{transform:scale(.92)}
+.ind-arrow:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.chip{cursor:pointer}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chip{font:600 12px 'Inter';letter-spacing:.04em;padding:9px 16px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.5);transition:color .35s,border-color .35s;position:relative;overflow:hidden}
 .chip i{position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--out-expo)}
 .chip span{position:relative;z-index:2}
 .chip.on{color:#fff;border-color:var(--red)}
 .chip.on i{transform:scaleX(1)}
-.counter{display:flex;align-items:baseline;gap:7px;font:400 34px 'Anton';color:var(--ink)}
+.counter{display:flex;flex:none;white-space:nowrap;align-items:baseline;gap:7px;font:400 34px 'Anton';color:var(--ink)}
 .counter .win{height:34px;overflow:hidden}
 .counter .strip{display:block;will-change:transform}
 .counter .strip b{display:block;font-weight:400;height:34px;line-height:34px}
@@ -123,24 +148,33 @@
 .ind-bar i{display:block;height:100%;background:var(--red);transform-origin:left;transform:scaleX(0)}
 
 @media (max-width:860px){
-  .ind-foot{right:88px}   /* keep the 01/06 counter clear of the WhatsApp button */
-  /* phones: header on top, one device in the middle, copy underneath */
-  .rail-wrap{left:0;top:20vh;bottom:auto;height:34vh}
+  /* phones: everything stacks in normal flow — heading, swipeable mockup, copy, controls —
+     so nothing can overlap or hide under the menu bar, whatever the screen height */
+  .ind-sec .ind-stage{height:auto;min-height:0;padding:86px 0 30px;display:flex;flex-direction:column}
+  .ind-head{order:1}.rail-wrap{order:2}.ind-foot{order:3}.copy{order:4}   /* controls sit right under the mockup */
+  .ind-head{position:relative;top:auto;left:auto;right:auto;margin:0 20px;flex-direction:column;align-items:flex-start;gap:0}
+  .ind-head .note{display:none}
+  .ind-head h2{max-width:none}
+  .rail-wrap{position:relative;top:auto;bottom:auto;left:auto;right:auto;height:min(64vw,420px);margin-top:20px}
   .rail-wrap::after{display:none}
   .panel{width:100vw}
   .p-devices{height:100%;align-items:center}
   .browser{width:86vw}
   .phone{display:none}
-  .copy{top:57vh;bottom:auto;left:20px;right:20px;width:auto;transform:none}
-  .copy .p-meta{top:0;bottom:auto}
+  .copy{position:relative;top:auto;left:auto;width:auto;transform:none;margin:22px 20px 0;display:grid}
+  .copy .p-meta{position:relative;top:auto;left:auto;right:auto;grid-area:1/1}   /* stacked; tallest sets the height */
   .p-num{font-size:44px}
   .p-name{font-size:23px;margin:6px 0 10px}
   .p-desc{font-size:14px;margin-bottom:14px}
   .p-scope{margin-top:12px}
-  .ind-head{flex-direction:column;align-items:flex-start}
-  .ind-head .note{display:none}
-  .ind-head h2{max-width:none}
+  .ind-foot{position:relative;left:auto;right:auto;bottom:auto;margin:16px 20px 0;gap:12px}
+  .ind-hint{letter-spacing:.1em;font-size:11px}
+  .counter{font-size:28px}.counter .win{height:28px}.counter .strip b{height:28px;line-height:28px}
   .chips{display:none}
+  .ind-arrow{width:42px;height:42px}
+}
+@media (max-width:359px){ .ind-hint span:last-child{display:none} }
+
 }
 
 

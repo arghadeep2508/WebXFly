@@ -1,7 +1,9 @@
 /* ==========================================================
    WebXFly — motion conductor
    ONE requestAnimationFrame loop for the whole page.
-   - eases the scroll position so every section moves smoothly
+   - draws every frame at the REAL scroll position, so pinned stages and the
+     animation inside them move together (no wobble / flutter)
+   - never reads layout while animating: positions are measured once and cached
    - only renders sections that are on (or near) the screen
    - goes idle when nothing is moving (saves battery on phones)
    - owns the page "chrome": nav state, progress bar, scroll-spy,
@@ -20,7 +22,10 @@
   /* ---------- cached layout (re-measured on resize / load / content change) ---------- */
   const docTop = (el) => el.getBoundingClientRect().top + scrollY;
   function measure() {
-    sections.forEach((s) => { s.top = docTop(s.el); s.h = s.el.offsetHeight; });
+    sections.forEach((s) => {
+      s.top = docTop(s.el); s.h = s.el.offsetHeight;
+      s.inner = (s.el.firstElementChild || s.el).offsetHeight;   // height of the sticky stage inside
+    });
     chrome.measure();
     dirty = true;
   }
@@ -35,10 +40,12 @@
     const darkEls = [...document.querySelectorAll('[data-dark]')];
     const links = [...document.querySelectorAll('.nav__links a[href^="#"]')];
     const targets = links.map((a) => document.getElementById(a.getAttribute('href').slice(1)));
-    let reveals = [], dark = [], spy = [], max = 1;
+    let reveals = [], dark = [], spy = [], max = 1, markTop = 0, markH = 1;
 
     function measure() {
-      reveals = [...document.querySelectorAll('.reveal')];
+      // remember where each reveal block sits (minus the slide it is currently doing)
+      reveals = [...document.querySelectorAll('.reveal')].map((el) => ({ el, top: docTop(el) - (el.__ty || 0), t: -1 }));
+      if (mark) { markTop = docTop(mark); markH = mark.offsetHeight || 1; }
       dark = darkEls.map((el) => ({ top: docTop(el), bot: docTop(el) + el.offsetHeight }));
       spy = targets.map((el) => (el ? docTop(el) : Infinity));
       max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
@@ -55,16 +62,16 @@
       spy.forEach((t, i) => { if (y + innerHeight * 0.4 >= t) active = i; });
       links.forEach((a, i) => a.classList.toggle('is-active', i === active));
       // blocks that fade up as they enter
-      reveals.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const t = reduced ? 1 : clamp((innerHeight * 0.92 - r.top) / (innerHeight * 0.24));
-        el.style.opacity = t;
-        el.style.transform = t >= 1 ? 'none' : `translate3d(0,${((1 - t) * 30).toFixed(1)}px,0)`;
+      reveals.forEach((r) => {
+        const t = reduced ? 1 : +clamp((innerHeight * 0.92 - (r.top - y)) / (innerHeight * 0.24)).toFixed(3);
+        if (t === r.t) return;                      // unchanged — skip the style write
+        r.t = t; r.el.__ty = (1 - t) * 30;
+        r.el.style.opacity = t;
+        r.el.style.transform = t >= 1 ? 'none' : `translate3d(0,${r.el.__ty.toFixed(1)}px,0)`;
       });
       // footer wordmark rises and its X fills red as you reach the very bottom
       if (mark) {
-        const r = mark.getBoundingClientRect();
-        const t = clamp((innerHeight - r.top) / (r.height * 1.6));
+        const t = clamp((innerHeight - (markTop - y)) / (markH * 1.6));
         mark.style.setProperty('--t', t.toFixed(3));
       }
     }
@@ -78,14 +85,12 @@
 
   /* ---------- the loop ---------- */
   function frame(ts) {
-    const target = scrollY;
-    cur = reduced ? target : cur + (target - cur) * 0.14;
-    if (Math.abs(target - cur) < 0.1) cur = target;
-    const moved = dirty || Math.abs(cur - last) > 0.01;
+    cur = scrollY;                                  // the real position: stages and their contents stay locked together
+    const moved = dirty || cur !== last;
 
     for (const s of sections) {
       if (!visible(s, cur)) continue;
-      if (moved || (s.live && !reduced)) s.render(cur, ts);
+      if (moved || (s.live && !reduced)) s.render(cur, ts, s);
     }
     if (moved) { chrome.update(cur); last = cur; dirty = false; }
     chrome.tick();
@@ -108,8 +113,8 @@
   /* ---------- public API ---------- */
   window.WXF = {
     add(s) {
-      s.top = 0; s.h = 0; sections.push(s);
-      if (!REC) { s.top = docTop(s.el); s.h = s.el.offsetHeight; }
+      s.top = 0; s.h = 0; s.inner = innerHeight; sections.push(s);
+      if (!REC) { s.top = docTop(s.el); s.h = s.el.offsetHeight; s.inner = (s.el.firstElementChild || s.el).offsetHeight; }
       dirty = true;
     },
   };
@@ -117,7 +122,7 @@
   // deterministic hook used to film demo videos (?rec=1)
   window.__render = (y, ms = performance.now()) => {
     measure();
-    sections.forEach((s) => s.render(y, ms));
+    sections.forEach((s) => s.render(y, ms, s));
     chrome.update(y); chrome.tick();
   };
   window.__renderAt = window.__render;

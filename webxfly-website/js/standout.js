@@ -44,6 +44,6 @@
     fH.style.opacity=f;   fH.style.transform=`translate3d(0,${(1-f)*22}px,0)`;
   }
 
-  const at=(y,t)=>(render(clamp((y-sec.offsetTop)/(sec.offsetHeight-innerHeight)),t));
+  const at=(y,t,m)=>(render(clamp((y-m.top)/Math.max(1,m.h-m.inner)),t));   // m = cached section size from motion.js
   WXF.add({ el: sec, render: at, live: true });   // live: the glow breathes continuously
 })();
