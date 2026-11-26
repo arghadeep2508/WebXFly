@@ -109,11 +109,22 @@
     // badge: just left of the sculpture's head
     // phones: in the empty space to the right of the buttons; desktop: just left of the sculpture's head
     if (mobile) {
-      const actions = content.querySelector('.actions');
-      hero.style.setProperty('--badge-x', vw - 90 - 14 + 'px');
-      hero.style.setProperty('--badge-y', content.offsetTop + actions.offsetTop + (actions.offsetHeight - 90) / 2 + 'px');
+      // beside the buttons if they leave room, else on the sculpture's shoulder, else hidden
+      const actions = content.querySelector('.actions'), B = 90, bx = vw - B - 14;
+      const usedRight = content.offsetLeft + Math.max(...[...actions.children].map(c => c.offsetLeft + c.offsetWidth));
+      const figTop = vh + lift - h, waTop = innerHeight - 96;
+      let by = -1;
+      if (usedRight + 10 < bx) by = content.offsetTop + actions.offsetTop + (actions.offsetHeight - B) / 2;
+      else if (figTop + 8 + B < waTop) by = figTop + 8;
+      badge.classList.toggle('is-off', by < 0);
+      hero.style.setProperty('--badge-x', bx + 'px');
+      hero.style.setProperty('--badge-y', Math.max(0, by) + 'px');
     } else {
-      hero.style.setProperty('--badge-x', Math.max(10, vw - right - w - 110) + 'px');
+      // just left of the sculpture's head, but never on top of the label or headline
+      const textRight = Math.max(...[...content.querySelectorAll('.kicker span, .title .line > span')].map(e => e.getBoundingClientRect().right));
+      const bx = Math.max(10, vw - right - w - 110, textRight + 16);
+      badge.classList.toggle('is-off', bx + 118 > vw - 8);
+      hero.style.setProperty('--badge-x', bx + 'px');
       hero.style.setProperty('--badge-y', vh * 0.2 + 'px');
     }
 
